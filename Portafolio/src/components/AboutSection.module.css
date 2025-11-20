@@ -1,0 +1,36 @@
+.contentWrapper {
+  display: flex;
+  flex-direction: column; /* Por defecto para móviles */
+  gap: 40px;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .contentWrapper {
+    flex-direction: row; /* En pantallas grandes, se pone en fila */
+    text-align: left;
+  }
+}
+
+.imageContainer {
+  flex-shrink: 0; /* No se encoge */
+}
+
+.profileImage {
+  width: 250px;
+  height: 250px;
+  border-radius: 50%; /* Hace la imagen circular */
+  object-fit: cover;
+  border: 5px solid var(--primary-color);
+  box-shadow: 0 0 0 8px rgba(97, 218, 251, 0.2);
+}
+
+.textContainer {
+  flex-grow: 1; /* Ocupa el espacio restante */
+  font-size: 1.1rem;
+  line-height: 1.8;
+}
+
+.textContainer p {
+  margin-bottom: 15px;
+}

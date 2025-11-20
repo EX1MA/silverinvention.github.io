@@ -1,0 +1,68 @@
+:root {
+  --primary-color: #61DAFB; /* Color de React */
+  --secondary-color: #333;
+  --accent-color: #007bff;
+  --text-color: #333;
+  --bg-color: #f8f8f8;
+  --card-bg: white;
+  --border-color: #eee;
+}
+
+/* Reset básico */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  width: 100%;
+  overflow-x: hidden; /* <--- Esto mata el espacio blanco */
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  width: 100%;
+  overflow-x: hidden; /* <--- Refuerzo para asegurar */
+  position: relative;
+}
+
+a {
+  text-decoration: none;
+  color: var(--accent-color);
+}
+
+/* Contenedor común para las secciones (para centrar y dar padding) */
+.section-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 20px;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 3rem;
+  margin-bottom: 60px;
+  color: var(--secondary-color);
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.section-title::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 4px;
+  background-color: var(--primary-color);
+  margin: 10px auto 0;
+  border-radius: 2px;
+}
+#root {
+  width: 100%;
+  overflow-x: hidden; /* Aseguramos que React tampoco se desborde */
+}

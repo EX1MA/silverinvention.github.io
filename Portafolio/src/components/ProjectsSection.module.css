@@ -1,0 +1,18 @@
+.sectionContainer {
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto; /* Centra la sección en la pantalla */
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 2rem;
+  color: #333;
+}
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+}

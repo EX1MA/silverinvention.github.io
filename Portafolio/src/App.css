@@ -40,3 +40,9 @@
 .read-the-docs {
   color: #888;
 }
+
+.appContainer {
+  font-family: 'Arial', sans-serif; /* Tu fuente preferida */
+  color: #333;
+  background-color: #f9f9f9;
+}

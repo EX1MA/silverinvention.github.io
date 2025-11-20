@@ -1,0 +1,38 @@
+.footer {
+  background-color: #222;
+  color: #fff;
+  padding: 40px 20px;
+  margin-top: 60px;
+}
+
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .content {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+}
+
+.socials {
+  display: flex;
+  gap: 20px;
+}
+
+.socials a {
+  color: #ccc;
+  transition: color 0.2s;
+}
+
+.socials a:hover {
+  color: var(--primary-color);
+}
