@@ -1,42 +1,80 @@
-:root {
-  --primary-color: #61DAFB; /* Color de React */
-  --secondary-color: #333;
-  --accent-color: #007bff;
-  --text-color: #333;
-  --bg-color: #f8f8f8;
-  --card-bg: white;
-  --border-color: #eee;
-}
-
-/* Reset básico */
+/* 1. RESET BÁSICO (Siempre al inicio) */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+:root {
+  /* PALETA "LIGHT" (Zorro de día) */
+  --bg-color: #f4f4f4;          /* Gris muy suave / Blanco */
+  --card-bg: #ffffff;
+  --text-color: #2c3e50;        /* Azul oscuro elegante */
+  --primary-color: #d35400;     /* Naranja Zorro (Fox Orange) */
+  --secondary-color: #1a1a1a;   /* Negro casi puro */
+  --accent-color: #d4af37;      /* Dorado Elegante */
+  --border-color: #e0e0e0;
+}
+
+/* PALETA "DARK" (Zorro de noche - Elegante) */
+[data-theme="dark"] {
+  --bg-color: #121212;          /* Negro profundo */
+  --card-bg: #1e1e1e;           /* Gris oscuro elegante */
+  --text-color: #e0e0e0;        /* Blanco humo */
+  --primary-color: #e67e22;     /* Naranja brillante */
+  --secondary-color: #d4af37;   /* El texto secundario (Títulos) ahora es Dorado */
+  --accent-color: #3498db;      /* Un toque de Azul Real para contraste */
+  --border-color: #333333;
+}
+
+/* 2. BARRA DE SCROLL PERSONALIZADA (Toque Pro) */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-color);
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--primary-color);
+  border-radius: 5px;
+  border: 2px solid var(--bg-color); /* Espacio alrededor */
+}
+
+/* 3. COLOR DE SELECCIÓN DE TEXTO */
+::selection {
+  background-color: var(--primary-color);
+  color: white;
+}
+
 html {
-  scroll-behavior: smooth;
   width: 100%;
-  overflow-x: hidden; /* <--- Esto mata el espacio blanco */
+  overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  line-height: 1.6;
-  color: var(--text-color);
   background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
   width: 100%;
-  overflow-x: hidden; /* <--- Refuerzo para asegurar */
-  position: relative;
+  overflow-x: hidden;
+  margin: 0;
+  min-height: 100vh;
+}
+
+#root {
+  width: 100%;
+  overflow-x: hidden;
 }
 
 a {
   text-decoration: none;
   color: var(--accent-color);
+  transition: color 0.3s ease;
 }
 
-/* Contenedor común para las secciones (para centrar y dar padding) */
+/* Contenedor común */
 .section-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -47,10 +85,11 @@ a {
   text-align: center;
   font-size: 3rem;
   margin-bottom: 60px;
-  color: var(--secondary-color);
+  color: var(--secondary-color); /* En dark mode será DORADO gracias a tu paleta */
   position: relative;
   display: inline-block;
   width: 100%;
+  transition: color 0.3s ease;
 }
 
 .section-title::after {
@@ -62,7 +101,19 @@ a {
   margin: 10px auto 0;
   border-radius: 2px;
 }
-#root {
-  width: 100%;
-  overflow-x: hidden; /* Aseguramos que React tampoco se desborde */
+
+/* Responsive */
+@media (max-width: 768px) {
+  .section-container {
+    padding: 50px 20px;
+  }
+
+  .section-title {
+    font-size: 2.2rem;
+    margin-bottom: 40px;
+  }
+
+  .section-title::after {
+    width: 60px;
+  }
 }

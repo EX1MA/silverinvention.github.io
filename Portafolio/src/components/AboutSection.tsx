@@ -54,13 +54,13 @@ export const AboutSection = () => {
           variants={itemVariants}
         >
           <p>
-            ¡Hola de nuevo\! Soy [Tu Nombre], un apasionado del desarrollo web con un enfoque en la creación de interfaces de usuario atractivas y responsivas. Mi viaje en el mundo de la programación comenzó hace [X] años, y desde entonces no he parado de aprender y construir.
+            ¡Hola de nuevo\! Soy Joel Contreras Bautista, un apasionado del desarrollo web con un enfoque en la creación de interfaces de usuario atractivas y responsivas. Mi viaje en el mundo de la programación comenzó hace [3] años, y desde entonces no he parado de aprender y construir.
           </p>
           <p>
             Me especializo en <strong>React</strong> y su ecosistema (TypeScript, Hooks, Context API), y disfruto transformando diseños en experiencias interactivas y eficientes. Siempre busco nuevas tecnologías y mejores prácticas para ofrecer soluciones innovadoras.
           </p>
           <p>
-            Fuera del código, me gusta [menciona un hobby o interés, ej. jugar videojuegos, leer libros, hacer senderismo]. Creo firmemente en la importancia de un buen equilibrio entre el trabajo y la vida personal para mantener la creatividad.
+            Fuera del código, me gusta jugar videojuegos, leer libros, hacer ejercicio, dibujar, fotografia. Creo firmemente en la importancia de un buen equilibrio entre el trabajo y la vida personal para mantener la creatividad.
           </p>
           <p>
             Si tienes un proyecto en mente o simplemente quieres saludar, no dudes en contactarme. ¡Me encantaría conectar contigo\!

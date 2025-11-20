@@ -36,7 +36,7 @@ export const HeroSection = () => {
           ¡Hola, mi nombre es
         </motion.p>
         <motion.h1 variants={itemVariants} className={heroStyles.title}>
-          [Tu Nombre Completo]
+          Joel Contreras Bautista
         </motion.h1>
         <motion.p variants={itemVariants} className={heroStyles.subtitle}>
           Soy un Desarrollador Frontend con React

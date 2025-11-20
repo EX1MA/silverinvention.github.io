@@ -1,8 +1,16 @@
 .appContainer {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #333;
-  background-color: #f9f9f9;
+  
+  /* --- CAMBIO CRUCIAL --- */
+  /* Usamos las variables en lugar de colores fijos */
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  /* ---------------------- */
+
   min-height: 100vh;
   width: 100%;
   overflow-x: hidden; /* Evita scroll horizontal indeseado */
+  
+  /* Añadimos transición para que al cambiar tema sea suave */
+  transition: background-color 0.3s ease, color 0.3s ease;
 }

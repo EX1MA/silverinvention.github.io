@@ -1,11 +1,16 @@
 .hero {
-  min-height: 100vh; /* Ocupa toda la altura de la ventana */
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  background: linear-gradient(135deg, #e0f2f7 0%, #d1e8ef 100%);
-  padding-top: 80px; /* Para que no se esconda detrás del navbar */
+  
+  /* --- CORRECCIÓN 1: Usar la variable de fondo --- */
+  background-color: var(--bg-color); 
+  /* Quitamos el linear-gradient fijo para que respete el modo oscuro */
+  
+  padding-top: 80px;
+  transition: background-color 0.3s ease; /* Suaviza el cambio de tema */
 }
 
 .heroContent {
@@ -15,26 +20,27 @@
 
 .preTitle {
   font-size: 1.5rem;
-  color: var(--secondary-color);
+  color: var(--accent-color); /* Usamos el acento (Dorado/Azul) */
   margin-bottom: 10px;
 }
 
 .title {
   font-size: 4.5rem;
-  color: var(--primary-color);
+  color: var(--primary-color); /* Naranja Zorro */
   margin-bottom: 20px;
   line-height: 1.1;
 }
 
 .subtitle {
   font-size: 2.2rem;
-  color: var(--text-color);
+  color: var(--text-color); /* Se adapta a blanco/negro automáticamente */
   margin-bottom: 30px;
 }
 
 .description {
   font-size: 1.2rem;
   color: var(--text-color);
+  opacity: 0.9; /* Un poco más suave */
   margin-bottom: 40px;
   max-width: 700px;
   margin-left: auto;
@@ -59,21 +65,52 @@
 
 .primaryButton {
   background-color: var(--primary-color);
-  color: white;
-  box-shadow: 0 4px 15px rgba(97, 218, 251, 0.4);
+  color: white; /* El texto blanco sobre naranja siempre se lee bien */
+  /* Sombra genérica suave en lugar de azul */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); 
 }
 
 .primaryButton:hover {
-  background-color: #4ac9f3;
+  /* --- CORRECCIÓN 2: Quitamos el azul fijo --- */
+  transform: translateY(-2px); /* Efecto de elevación */
+  filter: brightness(1.1); /* Hace el naranja un poquito más brillante */
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 .secondaryButton {
-  background-color: white;
-  color: var(--accent-color);
-  border: 2px solid var(--accent-color);
+  /* Fondo transparente o del color de la tarjeta */
+  background-color: transparent; 
+  color: var(--text-color);
+  border: 2px solid var(--primary-color);
 }
 
 .secondaryButton:hover {
-  background-color: var(--accent-color);
+  background-color: var(--primary-color);
   color: white;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+  .title {
+    font-size: 2.8rem;
+  }
+
+  .subtitle {
+    font-size: 1.5rem;
+  }
+
+  .description {
+    font-size: 1rem;
+    padding: 0 10px;
+  }
+
+  .buttons {
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+  }
+
+  .primaryButton, .secondaryButton {
+    width: 100%;
+  }
 }

@@ -1,72 +1,70 @@
 
-import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { motion } from 'framer-motion';
+import { useRef, useState } from 'react';
+import emailjs from '@emailjs/browser'; // Importamos la librería
 import contactStyles from './ContactSection.module.css';
 
 export const ContactSection = () => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.3 });
+  const form = useRef<HTMLFormElement>(null); // Referencia al formulario
+  const [status, setStatus] = useState(''); // Para mostrar mensajes de éxito/error
 
-  const sectionVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut" as const
-      }
+  const sendEmail = (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus('Enviando...');
+
+    if (form.current) {
+      emailjs.sendForm(
+        'TU_SERVICE_ID',   // <--- Pega aquí tu Service ID de EmailJS
+        'TU_TEMPLATE_ID',  // <--- Pega aquí tu Template ID
+        form.current,
+        'TU_PUBLIC_KEY'    // <--- Pega aquí tu Public Key
+      )
+      .then(() => {
+        setStatus('¡Mensaje enviado con éxito!');
+        form.current?.reset(); // Limpia el formulario
+      }, (error) => {
+        setStatus('Hubo un error, intenta de nuevo.');
+        console.error(error);
+      });
     }
   };
 
   return (
     <section id="contact" className="section-container">
-      <motion.h2 
-        className="section-title"
-        initial={{ opacity: 0, y: -20 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ delay: 0.1, duration: 0.5 }}
-      >
-        Contacto
-      </motion.h2>
+      {/* ... Título ... */}
       
-      <motion.div 
-        ref={ref}
-        className={contactStyles.formContainer}
-        variants={sectionVariants}
-        initial="hidden"
-        animate={isInView ? "visible" : "hidden"}
-      >
-        <p className={contactStyles.introText}>
-          ¿Tienes un proyecto en mente o quieres saber más sobre mi trabajo? ¡Envíame un mensaje!
-        </p>
+      <div className={contactStyles.formContainer}>
+        {/* ... Texto intro ... */}
 
-        <form className={contactStyles.contactForm} onSubmit={(e) => e.preventDefault()}>
+        <form ref={form} onSubmit={sendEmail} className={contactStyles.contactForm}>
           <div className={contactStyles.inputGroup}>
-            <label htmlFor="name">Nombre</label>
-            <input type="text" id="name" name="name" placeholder="Tu nombre" required />
+            <label>Nombre</label>
+            {/* IMPORTANTE: el 'name' debe coincidir con tu template de EmailJS */}
+            <input type="text" name="user_name" required /> 
           </div>
 
           <div className={contactStyles.inputGroup}>
-            <label htmlFor="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="tucorreo@ejemplo.com" required />
+            <label>Email</label>
+            <input type="email" name="user_email" required />
           </div>
 
           <div className={contactStyles.inputGroup}>
-            <label htmlFor="message">Mensaje</label>
-            <textarea id="message" name="message" rows={5} placeholder="¿En qué puedo ayudarte?" required></textarea>
+            <label>Mensaje</label>
+            <textarea name="message" rows={5} required></textarea>
           </div>
 
           <motion.button 
             type="submit" 
             className={contactStyles.submitButton}
-            whileHover={{ scale: 1.02, backgroundColor: '#4ac9f3' }}
+            whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            Enviar Mensaje
+            {status === 'Enviando...' ? 'Enviando...' : 'Enviar Mensaje'}
           </motion.button>
+          
+          {status && <p style={{marginTop: '10px', textAlign: 'center'}}>{status}</p>}
         </form>
-      </motion.div>
+      </div>
     </section>
   );
 };

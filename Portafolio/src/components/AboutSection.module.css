@@ -1,34 +1,61 @@
 .contentWrapper {
   display: flex;
-  flex-direction: column; /* Por defecto para móviles */
+  flex-direction: column;
   gap: 40px;
   align-items: center;
+
+  /* Estilo base (Modo Claro) */
+  background-color: var(--card-bg, #ffffff); /* Fallback a blanco si falla la variable */
+  padding: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color, #e0e0e0);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* --- FUERZA BRUTA: Si estamos en modo oscuro, usa estos colores --- */
+/* Esto arregla el problema si las variables globales no cargan bien */
+:global([data-theme="dark"]) .contentWrapper {
+  background-color: #1e1e1e; /* Gris oscuro elegante */
+  border-color: #333333;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3); /* Sombra más fuerte para modo oscuro */
 }
 
 @media (min-width: 768px) {
   .contentWrapper {
-    flex-direction: row; /* En pantallas grandes, se pone en fila */
+    flex-direction: row;
     text-align: left;
   }
 }
 
 .imageContainer {
-  flex-shrink: 0; /* No se encoge */
+  flex-shrink: 0;
 }
 
 .profileImage {
   width: 250px;
   height: 250px;
-  border-radius: 50%; /* Hace la imagen circular */
+  border-radius: 50%;
   object-fit: cover;
   border: 5px solid var(--primary-color);
-  box-shadow: 0 0 0 8px rgba(97, 218, 251, 0.2);
+  box-shadow: 0 0 0 8px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+}
+
+/* Ajuste de sombra de la imagen para modo oscuro */
+:global([data-theme="dark"]) .profileImage {
+  box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.05);
+}
+
+.profileImage:hover {
+  transform: scale(1.05);
 }
 
 .textContainer {
-  flex-grow: 1; /* Ocupa el espacio restante */
+  flex-grow: 1;
   font-size: 1.1rem;
   line-height: 1.8;
+  color: var(--text-color);
 }
 
 .textContainer p {

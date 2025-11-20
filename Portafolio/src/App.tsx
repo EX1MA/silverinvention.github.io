@@ -9,10 +9,15 @@ import { Footer } from './components/Footer';
 // Esto es para los estilos globales (reset, fuentes, etc.)
 import './global.css'; 
 import appStyles from './App.module.css'; // Estilos específicos para el layout principal
+import { ScrollProgress } from './components/ScrollProgress';
+import { CustomCursor } from './components/CustomCursor';
+import { ScrollToTop } from './components/ScrollToTop';
 
 function App() {
   return (
     <div className={appStyles.appContainer}>
+      <CustomCursor />
+      <ScrollProgress />
       <Navbar />
       <main>
         <HeroSection />
@@ -22,6 +27,7 @@ function App() {
         <ContactSection />
       </main>
       <Footer />
+      <ScrollToTop />
     </div>
   );
 }

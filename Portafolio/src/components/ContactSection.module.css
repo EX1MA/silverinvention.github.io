@@ -1,7 +1,7 @@
 .formContainer {
   max-width: 600px;
   margin: 0 auto;
-  background-color: var(--card-bg);
+ background-color: var(--card-bg);
   padding: 40px;
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.05);
