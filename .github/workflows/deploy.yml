@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main  # O 'master', revisa cómo se llama tu rama principal
+      - main  # Asegúrate de que tu rama principal se llame 'main'
 
 permissions:
   contents: write
@@ -11,6 +11,14 @@ permissions:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    
+    # --- CONFIGURACIÓN CLAVE ---
+    # Esto obliga a que todos los comandos (npm install, build)
+    # se ejecuten DENTRO de tu carpeta 'Portafolio'
+    defaults:
+      run:
+        working-directory: ./Portafolio
+
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
@@ -20,6 +28,8 @@ jobs:
         with:
           node-version: 20
           cache: 'npm'
+          # Le decimos dónde encontrar el archivo para la caché
+          cache-dependency-path: ./Portafolio/package-lock.json
 
       - name: Install Dependencies 🔧
         run: npm ci
@@ -30,5 +40,6 @@ jobs:
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: dist # La carpeta que genera Vite
-          branch: gh-pages # La rama donde se publica
+          # Aquí le decimos dónde buscar la carpeta 'dist' generada
+          folder: Portafolio/dist 
+          branch: gh-pages
