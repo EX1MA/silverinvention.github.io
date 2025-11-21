@@ -12,4 +12,8 @@ export const skills: Skill[] = [
   { name: 'GitHub', icon: 'https://cdn.svgporn.com/logos/github-icon.svg' },
   { name: 'Figma', icon: 'https://cdn.svgporn.com/logos/figma.svg' },
   // Agrega más habilidades aquí
+   { name: 'HTML5', icon: 'https://cdn.svgporn.com/logos/html-5.svg' },
+  { name: 'CSS3', icon: 'https://cdn.svgporn.com/logos/css-3.svg' },
+  { name: 'React', icon: 'https://cdn.svgporn.com/logos/react.svg' },
+  { name: 'TypeScript', icon: 'https://cdn.svgporn.com/logos/typescript-icon.svg' }
 ];

@@ -1,9 +1,14 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { skills } from '../data/skills'; // Tus datos de habilidades
 import skillsStyles from './SkillsSection.module.css';
+import type { Skill } from '../types';
 
-export const SkillsSection = () => {
+// Definimos las Props
+interface SkillsSectionProps {
+  skillsList: Skill[];
+}
+
+export const SkillsSection = ({ skillsList }: SkillsSectionProps) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.3 });
 
@@ -11,18 +16,13 @@ export const SkillsSection = () => {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.1 // Anima cada skill con un pequeño retraso
-      }
+      transition: { staggerChildren: 0.1 }
     }
   };
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1
-    }
+    visible: { y: 0, opacity: 1 }
   };
 
   return (
@@ -43,12 +43,12 @@ export const SkillsSection = () => {
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
       >
-        {skills.map((skill) => (
+        {skillsList.map((skill) => (
           <motion.div 
             key={skill.name} 
             className={skillsStyles.skillCard}
             variants={itemVariants}
-            whileHover={{ scale: 1.08, boxShadow: '0 8px 25px rgba(0,0,0,0.15)' }} // Animación al pasar el ratón
+            whileHover={{ scale: 1.08, boxShadow: '0 8px 25px rgba(0,0,0,0.15)' }}
             whileTap={{ scale: 0.95 }}
           >
             <img src={skill.icon} alt={skill.name} className={skillsStyles.skillIcon} />

@@ -1,10 +1,14 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { ProjectCard } from './ProjectCard';
-import { projects } from '../data/projects'; // Tus datos de proyectos
 import projectsStyles from './ProjectsSection.module.css';
+import type { Project } from '../types';
 
-export const ProjectsSection = () => {
+interface ProjectsSectionProps {
+  projectsList: Project[];
+}
+
+export const ProjectsSection = ({ projectsList }: ProjectsSectionProps) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
 
@@ -12,9 +16,7 @@ export const ProjectsSection = () => {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.15 // Anima cada ProjectCard con un retraso
-      }
+      transition: { staggerChildren: 0.15 }
     }
   };
 
@@ -41,7 +43,7 @@ export const ProjectsSection = () => {
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
       >
-        {projects.map((project) => (
+        {projectsList.map((project) => (
           <motion.div key={project.id} variants={itemVariants}>
             <ProjectCard project={project} />
           </motion.div>

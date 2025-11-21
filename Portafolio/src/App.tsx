@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
 import { AboutSection } from './components/AboutSection';
@@ -5,27 +7,47 @@ import { SkillsSection } from './components/SkillsSection';
 import { ProjectsSection } from './components/ProjectsSection';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
-
-// Esto es para los estilos globales (reset, fuentes, etc.)
-import './global.css'; 
-import appStyles from './App.module.css'; // Estilos específicos para el layout principal
 import { ScrollProgress } from './components/ScrollProgress';
 import { CustomCursor } from './components/CustomCursor';
 import { ScrollToTop } from './components/ScrollToTop';
 
+import { portfolioData } from './data/portfolioData';
+import './global.css'; 
+import appStyles from './App.module.css';
+import type { Role } from './types';
+
 function App() {
+  const [role, setRole] = useState<Role>('developer');
+  
+  const currentData = portfolioData[role];
+
+  useEffect(() => {
+    document.documentElement.style.setProperty('--primary-color', currentData.themeColor);
+  }, [role, currentData.themeColor]);
+
   return (
     <div className={appStyles.appContainer}>
       <CustomCursor />
       <ScrollProgress />
-      <Navbar />
-      <main>
-        <HeroSection />
-        <AboutSection />
-        <SkillsSection />
-        <ProjectsSection />
-        <ContactSection />
-      </main>
+      
+      <Navbar currentRole={role} onSwitchRole={setRole} />
+      
+      <AnimatePresence mode="wait">
+        <motion.main
+          key={role}
+          initial={{ opacity: 0, x: 20, filter: 'blur(10px)' }}
+          animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+          exit={{ opacity: 0, x: -20, filter: 'blur(10px)' }}
+          transition={{ duration: 0.4, ease: "easeInOut" }}
+        >
+          <HeroSection data={currentData.hero} />
+          <AboutSection data={currentData.about} /> 
+          <SkillsSection skillsList={currentData.skills} />
+          <ProjectsSection projectsList={currentData.projects} />
+          <ContactSection />
+        </motion.main>
+      </AnimatePresence>
+      
       <Footer />
       <ScrollToTop />
     </div>

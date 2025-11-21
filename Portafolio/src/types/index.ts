@@ -1,3 +1,6 @@
+
+export type Role = 'developer' | 'designer';
+
 export interface Project {
   id: number;
   title: string;
@@ -10,5 +13,5 @@ export interface Project {
 
 export interface Skill {
   name: string;
-  icon: string; // URL de un icono o path local
+  icon: string; 
 }
