@@ -1,68 +1,154 @@
+import { useEffect, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import aboutStyles from './AboutSection.module.css';
 import profilePic from '../assets/profile.jpg';
+import type { Stat } from '../types';
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface AboutData {
   text: string[];
+  stats?: Stat[];
 }
 
 interface AboutSectionProps {
-  data?: AboutData; // Hacemos que sea opcional con ?
+  data?: AboutData;
 }
 
 export const AboutSection = ({ data }: AboutSectionProps) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.5 });
+  const titleRef   = useRef<HTMLHeadingElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const statsRef   = useRef<HTMLDivElement>(null);
+  const counterEls = useRef<HTMLSpanElement[]>([]);
+  counterEls.current = [];
 
-  // --- PROTECCIÓN: Si no hay datos, no mostramos nada (o un mensaje) ---
+  const isTitleInView = useInView(titleRef, { once: true, amount: 0.5 });
+
   if (!data || !data.text) {
     return <div style={{ color: 'red', padding: 20 }}>Error: Faltan datos en AboutSection</div>;
   }
-  // --------------------------------------------------------------------
 
-  const sectionVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, ease: "easeOut" as const, staggerChildren: 0.2 }
-    }
+  const addCounterRef = (el: HTMLSpanElement | null) => {
+    if (el && !counterEls.current.includes(el)) counterEls.current.push(el);
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
-  };
+  // GSAP: content slide in
+  useEffect(() => {
+    if (!contentRef.current) return;
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        contentRef.current!.children,
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.75,
+          stagger: 0.2,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: contentRef.current,
+            start: 'top 80%',
+            once: true,
+          },
+        }
+      );
+    }, contentRef);
+    return () => ctx.revert();
+  }, [data]);
+
+  // GSAP: animated counters on stats
+  useEffect(() => {
+    if (!statsRef.current || !data.stats?.length) return;
+    const counters = counterEls.current;
+    if (!counters.length) return;
+
+    const ctx = gsap.context(() => {
+      // Stat cards slide in
+      gsap.fromTo(
+        statsRef.current!.children,
+        { opacity: 0, y: 40, scale: 0.92 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.65,
+          stagger: 0.15,
+          ease: 'back.out(1.4)',
+          scrollTrigger: {
+            trigger: statsRef.current,
+            start: 'top 85%',
+            once: true,
+          },
+        }
+      );
+
+      // Number counters
+      data.stats!.forEach((stat, i) => {
+        const el = counters[i];
+        if (!el) return;
+        const obj = { val: 0 };
+
+        gsap.to(obj, {
+          val: stat.value,
+          duration: 2.2,
+          ease: 'power2.out',
+          snap: { val: 1 },
+          onUpdate: () => {
+            el.textContent = Math.round(obj.val) + stat.suffix;
+          },
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 90%',
+            once: true,
+          },
+        });
+      });
+    }, statsRef);
+
+    return () => ctx.revert();
+  }, [data.stats]);
 
   return (
     <section id="about" className="section-container">
-      <motion.h2 
+      <motion.h2
+        ref={titleRef}
         className="section-title"
-        initial={{ opacity: 0, y: -20 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ delay: 0.1, duration: 0.5 }}
+        initial={{ opacity: 0, y: -28 }}
+        animate={isTitleInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
       >
         Sobre Mí
       </motion.h2>
-      
-      <motion.div 
-        ref={ref}
-        className={aboutStyles.contentWrapper}
-        variants={sectionVariants}
-        initial="hidden"
-        animate={isInView ? "visible" : "hidden"}
-      >
-        <motion.div className={aboutStyles.imageContainer} variants={itemVariants}>
-          <img src={profilePic} alt="Foto de Perfil" className={aboutStyles.profileImage} />
-        </motion.div>
-        
-        <motion.div className={aboutStyles.textContainer} variants={itemVariants}>
+
+      {/* Profile + Text */}
+      <div ref={contentRef} className={aboutStyles.contentWrapper}>
+        <div className={aboutStyles.imageContainer}>
+          <img src={profilePic} alt="Joel Contreras" className={aboutStyles.profileImage} />
+          <div className={aboutStyles.imageBorder} />
+        </div>
+
+        <div className={aboutStyles.textContainer}>
           {data.text.map((paragraph, index) => (
             <p key={index}>{paragraph}</p>
           ))}
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
+
+      {/* Animated Stats */}
+      {data.stats && data.stats.length > 0 && (
+        <div ref={statsRef} className={aboutStyles.statsGrid}>
+          {data.stats.map((stat, i) => (
+            <div key={i} className={aboutStyles.statCard}>
+              <span ref={addCounterRef} className={aboutStyles.statValue}>
+                0{stat.suffix}
+              </span>
+              <span className={aboutStyles.statLabel}>{stat.label}</span>
+            </div>
+          ))}
+        </div>
+      )}
     </section>
   );
 };

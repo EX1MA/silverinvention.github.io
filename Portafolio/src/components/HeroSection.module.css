@@ -1,85 +1,203 @@
 .hero {
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  
-  /* --- CORRECCIÓN 1: Usar la variable de fondo --- */
-  background-color: var(--bg-color); 
-  /* Quitamos el linear-gradient fijo para que respete el modo oscuro */
-  
+  background-color: var(--bg-color);
   padding-top: 80px;
-  transition: background-color 0.3s ease; /* Suaviza el cambio de tema */
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.3s ease;
 }
 
+/* ── Floating GSAP Shapes ── */
+.shapesContainer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.shape {
+  position: absolute;
+}
+
+/* Large soft blobs */
+.blob1 {
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, var(--primary-color) 0%, transparent 65%);
+  opacity: 0.13;
+  top: -120px;
+  right: -100px;
+}
+
+.blob2 {
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 60% 50%, var(--accent-color) 0%, transparent 65%);
+  opacity: 0.10;
+  bottom: 5%;
+  left: -80px;
+}
+
+/* Outlined rings */
+.ring1 {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  border: 2.5px solid var(--primary-color);
+  opacity: 0.18;
+  top: 18%;
+  right: 10%;
+}
+
+.ring2 {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  border: 2px solid var(--accent-color);
+  opacity: 0.15;
+  bottom: 22%;
+  left: 9%;
+}
+
+/* Rotated squares */
+.square1 {
+  width: 75px;
+  height: 75px;
+  background: var(--primary-color);
+  opacity: 0.09;
+  top: 62%;
+  right: 18%;
+  border-radius: 14px;
+  transform: rotate(30deg);
+}
+
+.square2 {
+  width: 50px;
+  height: 50px;
+  border: 2px solid var(--primary-color);
+  opacity: 0.15;
+  top: 28%;
+  left: 14%;
+  border-radius: 10px;
+  transform: rotate(20deg);
+}
+
+/* Dots */
+.dot1 {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  opacity: 0.28;
+  top: 38%;
+  left: 7%;
+}
+
+.dot2 {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--accent-color);
+  opacity: 0.32;
+  top: 55%;
+  right: 7%;
+}
+
+/* Horizontal line */
+.line1 {
+  width: 160px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+  opacity: 0.22;
+  bottom: 18%;
+  left: 28%;
+  border-radius: 2px;
+}
+
+/* ── Hero Content ── */
 .heroContent {
-  max-width: 900px;
-  padding: 20px;
+  max-width: 860px;
+  padding: 20px 24px;
+  position: relative;
+  z-index: 1;
 }
 
 .preTitle {
-  font-size: 1.5rem;
-  color: var(--accent-color); /* Usamos el acento (Dorado/Azul) */
-  margin-bottom: 10px;
+  font-size: 1.4rem;
+  color: var(--accent-color);
+  margin-bottom: 12px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
 }
 
 .title {
-  font-size: 4.5rem;
-  color: var(--primary-color); /* Naranja Zorro */
-  margin-bottom: 20px;
-  line-height: 1.1;
+  font-size: 5rem;
+  color: var(--primary-color);
+  margin-bottom: 18px;
+  line-height: 1.05;
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 .subtitle {
-  font-size: 2.2rem;
-  color: var(--text-color); /* Se adapta a blanco/negro automáticamente */
-  margin-bottom: 30px;
+  font-size: 2rem;
+  color: var(--text-color);
+  margin-bottom: 28px;
+  font-weight: 600;
+  opacity: 0.88;
 }
 
 .description {
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   color: var(--text-color);
-  opacity: 0.9; /* Un poco más suave */
-  margin-bottom: 40px;
-  max-width: 700px;
+  opacity: 0.78;
+  margin-bottom: 44px;
+  max-width: 680px;
   margin-left: auto;
   margin-right: auto;
+  line-height: 1.75;
 }
 
 .buttons {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 18px;
+  flex-wrap: wrap;
 }
 
-.primaryButton, .secondaryButton {
-  padding: 15px 30px;
+.primaryButton,
+.secondaryButton {
+  padding: 14px 32px;
   border: none;
-  border-radius: 8px;
-  font-size: 1.1rem;
+  border-radius: 50px;
+  font-size: 1rem;
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-weight: bold;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  transition: box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .primaryButton {
-  background-color: var(--primary-color);
-  color: white; /* El texto blanco sobre naranja siempre se lee bien */
-  /* Sombra genérica suave en lugar de azul */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); 
+  background: linear-gradient(135deg, var(--primary-color) 0%, color-mix(in srgb, var(--primary-color) 70%, #000) 100%);
+  color: white;
+  box-shadow: 0 4px 20px color-mix(in srgb, var(--primary-color) 50%, transparent);
 }
 
 .primaryButton:hover {
-  /* --- CORRECCIÓN 2: Quitamos el azul fijo --- */
-  transform: translateY(-2px); /* Efecto de elevación */
-  filter: brightness(1.1); /* Hace el naranja un poquito más brillante */
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 28px color-mix(in srgb, var(--primary-color) 55%, transparent);
 }
 
 .secondaryButton {
-  /* Fondo transparente o del color de la tarjeta */
-  background-color: transparent; 
+  background-color: transparent;
   color: var(--text-color);
   border: 2px solid var(--primary-color);
 }
@@ -89,28 +207,80 @@
   color: white;
 }
 
-/* --- RESPONSIVE --- */
+/* ── Scroll Indicator ── */
+.scrollIndicator {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  z-index: 1;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.scrollIndicator:hover {
+  opacity: 1;
+}
+
+.scrollMouse {
+  width: 28px;
+  height: 44px;
+  border: 2px solid var(--text-color);
+  border-radius: 14px;
+  display: flex;
+  justify-content: center;
+  padding-top: 6px;
+  opacity: 0.65;
+}
+
+.scrollWheel {
+  width: 5px;
+  height: 10px;
+  border-radius: 3px;
+  background-color: var(--primary-color);
+}
+
+.scrollLabel {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-color);
+  opacity: 0.6;
+}
+
+/* ── Responsive ── */
 @media (max-width: 768px) {
   .title {
-    font-size: 2.8rem;
+    font-size: 3rem;
   }
 
   .subtitle {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
   }
 
   .description {
     font-size: 1rem;
-    padding: 0 10px;
+    padding: 0 8px;
   }
 
   .buttons {
     flex-direction: column;
-    gap: 15px;
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto;
+  }
+
+  .primaryButton,
+  .secondaryButton {
     width: 100%;
   }
 
-  .primaryButton, .secondaryButton {
-    width: 100%;
-  }
+  .blob1 { width: 240px; height: 240px; }
+  .blob2 { width: 180px; height: 180px; }
+  .ring1 { display: none; }
 }

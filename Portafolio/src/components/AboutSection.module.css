@@ -3,61 +3,146 @@
   flex-direction: column;
   gap: 40px;
   align-items: center;
-
-  /* Estilo base (Modo Claro) */
-  background-color: var(--card-bg, #ffffff); /* Fallback a blanco si falla la variable */
-  padding: 40px;
-  border-radius: 12px;
-  border: 1px solid var(--border-color, #e0e0e0);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  background-color: var(--card-bg);
+  padding: 44px;
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  margin-bottom: 36px;
 }
 
-/* --- FUERZA BRUTA: Si estamos en modo oscuro, usa estos colores --- */
-/* Esto arregla el problema si las variables globales no cargan bien */
 :global([data-theme="dark"]) .contentWrapper {
-  background-color: #1e1e1e; /* Gris oscuro elegante */
+  background-color: #1e1e1e;
   border-color: #333333;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3); /* Sombra más fuerte para modo oscuro */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 @media (min-width: 768px) {
   .contentWrapper {
     flex-direction: row;
+    align-items: flex-start;
     text-align: left;
+    gap: 52px;
   }
 }
 
+/* ── Image ── */
 .imageContainer {
   flex-shrink: 0;
+  position: relative;
 }
 
 .profileImage {
-  width: 250px;
-  height: 250px;
+  width: 220px;
+  height: 220px;
   border-radius: 50%;
   object-fit: cover;
-  border: 5px solid var(--primary-color);
-  box-shadow: 0 0 0 8px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s ease;
+  border: 4px solid var(--primary-color);
+  box-shadow: 0 0 0 10px color-mix(in srgb, var(--primary-color) 12%, transparent);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  position: relative;
+  z-index: 1;
 }
 
-/* Ajuste de sombra de la imagen para modo oscuro */
-:global([data-theme="dark"]) .profileImage {
-  box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.05);
+.imageBorder {
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 2px dashed var(--primary-color);
+  opacity: 0.35;
+  animation: rotateBorder 12s linear infinite;
+}
+
+@keyframes rotateBorder {
+  to { transform: rotate(360deg); }
 }
 
 .profileImage:hover {
-  transform: scale(1.05);
+  transform: scale(1.04);
+  box-shadow: 0 0 0 14px color-mix(in srgb, var(--primary-color) 15%, transparent);
 }
 
+:global([data-theme="dark"]) .profileImage {
+  box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.06);
+}
+
+/* ── Text ── */
 .textContainer {
   flex-grow: 1;
-  font-size: 1.1rem;
-  line-height: 1.8;
+  font-size: 1.05rem;
+  line-height: 1.85;
   color: var(--text-color);
 }
 
 .textContainer p {
-  margin-bottom: 15px;
+  margin-bottom: 18px;
+}
+
+.textContainer p:last-child {
+  margin-bottom: 0;
+}
+
+/* ── Stats Grid ── */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 600px) {
+  .statsGrid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .contentWrapper {
+    padding: 28px 22px;
+  }
+
+  .profileImage {
+    width: 170px;
+    height: 170px;
+  }
+}
+
+.statCard {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 28px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.statCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.10);
+}
+
+:global([data-theme="dark"]) .statCard {
+  background-color: #1e1e1e;
+  border-color: #333;
+}
+
+.statValue {
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: var(--primary-color);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.statLabel {
+  font-size: 0.85rem;
+  color: var(--text-color);
+  opacity: 0.68;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-align: center;
 }
