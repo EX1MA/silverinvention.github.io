@@ -1,286 +1,311 @@
 .hero {
-  min-height: 100vh;
+  position: relative;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  background-color: var(--bg-color);
-  padding-top: 80px;
-  position: relative;
   overflow: hidden;
-  transition: background-color 0.3s ease;
+  background-color: var(--bg-color);
+  padding: 120px 24px 80px;
 }
 
-/* ── Floating GSAP Shapes ── */
-.shapesContainer {
+/* ══ Animated mesh gradient ══════════════════ */
+.mesh {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse at 15% 45%, color-mix(in srgb, var(--primary-color) 18%, transparent) 0%, transparent 55%),
+    radial-gradient(ellipse at 82% 18%, color-mix(in srgb, var(--accent-color) 13%, transparent) 0%, transparent 52%),
+    radial-gradient(ellipse at 58% 88%, color-mix(in srgb, var(--primary-color) 10%, transparent) 0%, transparent 50%);
+  animation: meshDrift 10s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes meshDrift {
+  0%   { opacity: 0.7; transform: scale(1); }
+  100% { opacity: 1;   transform: scale(1.04); }
+}
+
+/* ══ Floating GSAP Shapes ════════════════════ */
+.shapes {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  z-index: 0;
+  z-index: 1;
 }
 
-.shape {
-  position: absolute;
-}
+.shape { position: absolute; }
 
-/* Large soft blobs */
-.blob1 {
-  width: 420px;
-  height: 420px;
+/* Big soft blobs */
+.s1 {
+  width: 380px; height: 380px;
   border-radius: 50%;
-  background: radial-gradient(circle at 40% 40%, var(--primary-color) 0%, transparent 65%);
-  opacity: 0.13;
-  top: -120px;
-  right: -100px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--primary-color) 22%, transparent) 0%, transparent 70%);
+  top: -100px; right: -80px;
 }
-
-.blob2 {
-  width: 320px;
-  height: 320px;
+.s2 {
+  width: 280px; height: 280px;
   border-radius: 50%;
-  background: radial-gradient(circle at 60% 50%, var(--accent-color) 0%, transparent 65%);
-  opacity: 0.10;
-  bottom: 5%;
-  left: -80px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent-color) 18%, transparent) 0%, transparent 70%);
+  bottom: 0; left: -60px;
 }
 
 /* Outlined rings */
-.ring1 {
-  width: 220px;
-  height: 220px;
+.s3 {
+  width: 200px; height: 200px;
   border-radius: 50%;
-  border: 2.5px solid var(--primary-color);
-  opacity: 0.18;
-  top: 18%;
-  right: 10%;
-}
-
-.ring2 {
-  width: 130px;
-  height: 130px;
-  border-radius: 50%;
-  border: 2px solid var(--accent-color);
-  opacity: 0.15;
-  bottom: 22%;
-  left: 9%;
-}
-
-/* Rotated squares */
-.square1 {
-  width: 75px;
-  height: 75px;
-  background: var(--primary-color);
-  opacity: 0.09;
-  top: 62%;
-  right: 18%;
-  border-radius: 14px;
-  transform: rotate(30deg);
-}
-
-.square2 {
-  width: 50px;
-  height: 50px;
   border: 2px solid var(--primary-color);
-  opacity: 0.15;
-  top: 28%;
-  left: 14%;
+  opacity: 0.18;
+  top: 20%; right: 10%;
+}
+.s4 {
+  width: 110px; height: 110px;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent-color);
+  opacity: 0.16;
+  bottom: 25%; left: 9%;
+}
+
+/* Squares */
+.s5 {
+  width: 70px; height: 70px;
+  border-radius: 16px;
+  background: var(--primary-color);
+  opacity: 0.08;
+  top: 60%; right: 18%;
+  transform: rotate(25deg);
+}
+.s6 {
+  width: 44px; height: 44px;
   border-radius: 10px;
+  border: 2px solid var(--primary-color);
+  opacity: 0.16;
+  top: 28%; left: 12%;
   transform: rotate(20deg);
 }
 
 /* Dots */
-.dot1 {
-  width: 22px;
-  height: 22px;
+.s7 {
+  width: 18px; height: 18px;
   border-radius: 50%;
   background: var(--primary-color);
-  opacity: 0.28;
-  top: 38%;
-  left: 7%;
+  opacity: 0.30;
+  top: 38%; left: 6%;
 }
-
-.dot2 {
-  width: 15px;
-  height: 15px;
+.s8 {
+  width: 12px; height: 12px;
   border-radius: 50%;
   background: var(--accent-color);
-  opacity: 0.32;
-  top: 55%;
-  right: 7%;
+  opacity: 0.35;
+  top: 52%; right: 7%;
 }
 
-/* Horizontal line */
-.line1 {
-  width: 160px;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
-  opacity: 0.22;
-  bottom: 18%;
-  left: 28%;
-  border-radius: 2px;
-}
-
-/* ── Hero Content ── */
-.heroContent {
-  max-width: 860px;
-  padding: 20px 24px;
+/* ══ Content ════════════════════════════════ */
+.content {
   position: relative;
-  z-index: 1;
+  z-index: 2;
+  max-width: 900px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+/* Pre-title badge */
 .preTitle {
-  font-size: 1.4rem;
-  color: var(--accent-color);
-  margin-bottom: 12px;
-  font-weight: 500;
-  letter-spacing: 0.03em;
-}
-
-.title {
-  font-size: 5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   color: var(--primary-color);
-  margin-bottom: 18px;
-  line-height: 1.05;
+  background: color-mix(in srgb, var(--primary-color) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--primary-color) 25%, transparent);
+  padding: 7px 18px;
+  border-radius: 50px;
+  margin-bottom: 32px;
+}
+
+.preTitleDot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.7); }
+}
+
+/* ══ Title word reveal ══ */
+.title {
+  font-size: clamp(3.2rem, 9vw, 7rem);
   font-weight: 800;
-  letter-spacing: -0.02em;
+  line-height: 1.06;
+  letter-spacing: -0.04em;
+  color: var(--secondary-color);
+  margin-bottom: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0;
 }
 
+/* Gradient on name — applied via inline text if needed; keep base black */
+.wordWrapper {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  margin-right: 0.18em;
+}
+
+.word {
+  display: inline-block;
+  /* GSAP starts these at y: 110% */
+}
+
+/* Make the name gradient */
+.title .wordWrapper:last-child .word {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ══ Subtitle ══ */
 .subtitle {
-  font-size: 2rem;
-  color: var(--text-color);
-  margin-bottom: 28px;
-  font-weight: 600;
-  opacity: 0.88;
+  font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.01em;
+  margin-bottom: 24px;
 }
 
+/* ══ Description ══ */
 .description {
-  font-size: 1.15rem;
-  color: var(--text-color);
-  opacity: 0.78;
-  margin-bottom: 44px;
-  max-width: 680px;
-  margin-left: auto;
-  margin-right: auto;
-  line-height: 1.75;
+  font-size: 1.05rem;
+  line-height: 1.78;
+  color: var(--text-muted);
+  max-width: 600px;
+  margin-bottom: 48px;
 }
 
+/* ══ Magnetic Buttons ══ */
 .buttons {
   display: flex;
-  justify-content: center;
-  gap: 18px;
+  gap: 16px;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
-.primaryButton,
-.secondaryButton {
-  padding: 14px 32px;
-  border: none;
+.primaryBtn,
+.secondaryBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 34px;
   border-radius: 50px;
-  font-size: 1rem;
-  cursor: pointer;
+  font-size: 0.95rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
-  transition: box-shadow 0.3s ease;
-  position: relative;
-  overflow: hidden;
+  font-family: var(--font);
+  cursor: pointer;
+  border: none;
+  letter-spacing: 0.03em;
+  /* GSAP magnetic will transform */
+  will-change: transform;
+  transition: box-shadow 0.3s ease, filter 0.3s ease;
 }
 
-.primaryButton {
+.primaryBtn {
   background: linear-gradient(135deg, var(--primary-color) 0%, color-mix(in srgb, var(--primary-color) 70%, #000) 100%);
   color: white;
-  box-shadow: 0 4px 20px color-mix(in srgb, var(--primary-color) 50%, transparent);
+  box-shadow: 0 6px 24px color-mix(in srgb, var(--primary-color) 40%, transparent);
 }
 
-.primaryButton:hover {
-  box-shadow: 0 8px 28px color-mix(in srgb, var(--primary-color) 55%, transparent);
+.primaryBtn:hover {
+  box-shadow: 0 10px 36px color-mix(in srgb, var(--primary-color) 55%, transparent);
+  filter: brightness(1.08);
 }
 
-.secondaryButton {
-  background-color: transparent;
+.secondaryBtn {
+  background: transparent;
   color: var(--text-color);
-  border: 2px solid var(--primary-color);
+  border: 2px solid var(--border-color);
 }
 
-.secondaryButton:hover {
-  background-color: var(--primary-color);
-  color: white;
+.secondaryBtn:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  background: color-mix(in srgb, var(--primary-color) 6%, transparent);
 }
 
-/* ── Scroll Indicator ── */
+.btnIcon {
+  width: 18px; height: 18px;
+  flex-shrink: 0;
+}
+
+/* ══ Scroll Indicator ══ */
 .scrollIndicator {
   position: absolute;
-  bottom: 32px;
+  bottom: 36px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
+  z-index: 2;
   cursor: pointer;
-  z-index: 1;
-  opacity: 0.7;
+  background: none;
+  border: none;
+  opacity: 0.65;
   transition: opacity 0.3s ease;
 }
 
-.scrollIndicator:hover {
-  opacity: 1;
-}
+.scrollIndicator:hover { opacity: 1; }
 
 .scrollMouse {
-  width: 28px;
-  height: 44px;
-  border: 2px solid var(--text-color);
-  border-radius: 14px;
+  width: 26px; height: 42px;
+  border: 1.5px solid var(--text-muted);
+  border-radius: 13px;
   display: flex;
   justify-content: center;
-  padding-top: 6px;
-  opacity: 0.65;
+  padding-top: 7px;
 }
 
 .scrollWheel {
-  width: 5px;
-  height: 10px;
-  border-radius: 3px;
-  background-color: var(--primary-color);
+  width: 4px; height: 8px;
+  border-radius: 2px;
+  background: var(--primary-color);
 }
 
-.scrollLabel {
-  font-size: 0.7rem;
-  letter-spacing: 0.12em;
+.scrollText {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--text-color);
-  opacity: 0.6;
+  color: var(--text-muted);
 }
 
-/* ── Responsive ── */
+/* ══ Responsive ══ */
 @media (max-width: 768px) {
-  .title {
-    font-size: 3rem;
-  }
-
-  .subtitle {
-    font-size: 1.4rem;
-  }
-
-  .description {
-    font-size: 1rem;
-    padding: 0 8px;
-  }
+  .s1 { width: 220px; height: 220px; }
+  .s2 { width: 160px; height: 160px; }
+  .s3, .s4 { display: none; }
 
   .buttons {
     flex-direction: column;
     width: 100%;
-    max-width: 280px;
-    margin: 0 auto;
+    max-width: 300px;
   }
 
-  .primaryButton,
-  .secondaryButton {
+  .primaryBtn, .secondaryBtn {
     width: 100%;
+    justify-content: center;
   }
-
-  .blob1 { width: 240px; height: 240px; }
-  .blob2 { width: 180px; height: 180px; }
-  .ring1 { display: none; }
 }

@@ -1,67 +1,63 @@
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useRef } from 'react';
+import gsap from 'gsap';
 import styles from './CustomCursor.module.css';
 
 export const CustomCursor = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [isHovering, setIsHovering] = useState(false);
+  const dotRef  = useRef<HTMLDivElement>(null);
+  const ringRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const mouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
+    const dot  = dotRef.current;
+    const ring = ringRef.current;
+    if (!dot || !ring) return;
+
+    // Center elements on mouse using GSAP percentages
+    gsap.set([dot, ring], { xPercent: -50, yPercent: -50 });
+
+    // Ultra-smooth quickTo — dot is instant, ring lags for organic feel
+    const xDot  = gsap.quickTo(dot,  'x', { duration: 0.06, ease: 'power3' });
+    const yDot  = gsap.quickTo(dot,  'y', { duration: 0.06, ease: 'power3' });
+    const xRing = gsap.quickTo(ring, 'x', { duration: 0.38, ease: 'power2' });
+    const yRing = gsap.quickTo(ring, 'y', { duration: 0.38, ease: 'power2' });
+
+    const onMove = (e: MouseEvent) => {
+      xDot(e.clientX);
+      yDot(e.clientY);
+      xRing(e.clientX);
+      yRing(e.clientY);
     };
 
-    // Detectar si estamos sobre un elemento clickeable
-    const handleMouseOver = (e: MouseEvent) => {
+    const onOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      // Verifica si el elemento es un enlace, botón o tiene cursor:pointer
-      const isClickable = 
-        target.tagName === 'A' || 
+      const clickable =
+        target.tagName === 'A' ||
         target.tagName === 'BUTTON' ||
-        target.closest('a') || // Busca si está dentro de un link
-        target.closest('button') ||
+        !!target.closest('a') ||
+        !!target.closest('button') ||
         window.getComputedStyle(target).cursor === 'pointer';
 
-      if (isClickable) {
-        setIsHovering(true);
+      if (clickable) {
+        gsap.to(ring, { scale: 2.2, opacity: 0.5, duration: 0.35, ease: 'power2.out' });
+        gsap.to(dot,  { scale: 0.4, duration: 0.2 });
       } else {
-        setIsHovering(false);
+        gsap.to(ring, { scale: 1, opacity: 1, duration: 0.45, ease: 'elastic.out(1, 0.5)' });
+        gsap.to(dot,  { scale: 1, duration: 0.3 });
       }
     };
 
-    window.addEventListener("mousemove", mouseMove);
-    window.addEventListener("mouseover", handleMouseOver);
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseover', onOver);
 
     return () => {
-      window.removeEventListener("mousemove", mouseMove);
-      window.removeEventListener("mouseover", handleMouseOver);
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseover', onOver);
     };
   }, []);
 
-  const variants = {
-    default: {
-      x: mousePosition.x - 10, // Centrar el cursor (mitad de width)
-      y: mousePosition.y - 10,
-      scale: 1,
-      backgroundColor: "transparent",
-      border: "2px solid var(--primary-color)"
-    },
-    hover: {
-      x: mousePosition.x - 25, // Centrar el cursor grande
-      y: mousePosition.y - 25,
-      scale: 1.5,
-      backgroundColor: "rgba(var(--primary-color), 0.1)", // Un poco transparente
-      border: "2px solid var(--primary-color)",
-      mixBlendMode: "difference" as const // Efecto de inversión de color cool
-    }
-  };
-
   return (
-    <motion.div
-      className={styles.cursor}
-      variants={variants}
-      animate={isHovering ? "hover" : "default"}
-      transition={{ type: "spring", stiffness: 500, damping: 28 }}
-    />
+    <>
+      <div ref={dotRef}  className={styles.dot}  />
+      <div ref={ringRef} className={styles.ring} />
+    </>
   );
 };

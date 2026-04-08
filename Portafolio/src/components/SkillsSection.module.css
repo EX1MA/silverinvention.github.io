@@ -1,52 +1,79 @@
-.gridContainer {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-  gap: 20px;
-  max-width: 900px;
-  margin: 0 auto;
+.section {
+  padding-bottom: 120px;
+  overflow: hidden;
 }
 
-.skillCard {
-  background-color: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
-  padding: 22px 10px 16px;
+.header {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 64px;
+}
+
+/* ── Marquee ─────────────────────────── */
+.marqueesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.marqueeWrapper {
+  overflow: hidden;
+  /* Fade edges */
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
+}
+
+.marqueeTrack {
+  display: flex;
+  gap: 16px;
+  width: max-content;
+  will-change: transform;
+}
+
+/* ── Skill Chip ──────────────────────── */
+.skillChip {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  text-align: center;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.05);
-  cursor: pointer;
-  transition: border-color 0.25s ease;
-  /* Start hidden for GSAP entrance */
-  opacity: 0;
+  gap: 12px;
+  padding: 14px 24px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 50px;
+  white-space: nowrap;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  cursor: default;
+  flex-shrink: 0;
 }
 
-.skillIcon {
-  width: 52px;
-  height: 52px;
-  margin-bottom: 10px;
+.skillChip:hover {
+  border-color: var(--primary-color);
+  box-shadow: 0 4px 20px color-mix(in srgb, var(--primary-color) 15%, transparent);
+  transform: translateY(-3px);
+}
+
+.chipIcon {
+  width: 28px;
+  height: 28px;
   object-fit: contain;
+  flex-shrink: 0;
 }
 
-.skillName {
-  font-size: 0.82rem;
+.chipName {
+  font-size: 0.92rem;
   font-weight: 700;
-  color: var(--secondary-color);
-  letter-spacing: 0.02em;
-}
-
-@media (max-width: 480px) {
-  .gridContainer {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-  }
-
-  .skillIcon {
-    width: 40px;
-    height: 40px;
-  }
+  color: var(--text-color);
+  letter-spacing: 0.01em;
 }

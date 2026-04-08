@@ -1,68 +1,63 @@
 .card {
   background-color: var(--card-bg);
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-md);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   height: 100%;
-  border: 1px solid var(--border-color);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  will-change: transform;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-lg);
 }
 
 .highlighted {
   border-color: var(--primary-color);
-  box-shadow: 0 4px 20px color-mix(in srgb, var(--primary-color) 15%, transparent);
+  box-shadow: 0 4px 24px color-mix(in srgb, var(--primary-color) 18%, transparent);
 }
 
-/* ── Image Section ── */
-.imageWrapper {
+/* ── Image ── */
+.imageWrap {
   position: relative;
+  height: 240px;
   overflow: hidden;
-  height: 220px;
   flex-shrink: 0;
 }
 
-.cardImage {
-  width: 100%;
-  height: 100%;
+.img {
+  width: 100%; height: 100%;
   object-fit: cover;
-  display: block;
-  transition: transform 0.5s ease;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.card:hover .cardImage {
-  transform: scale(1.06);
-}
+.card:hover .img { transform: scale(1.07); }
 
 /* Hover overlay */
-.imageOverlay {
+.overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.85) 0%,
-    rgba(0, 0, 0, 0.75) 100%
-  );
+  background: linear-gradient(to bottom, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.78) 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 14px;
+  gap: 16px;
   opacity: 0;
-  transition: opacity 0.35s ease;
-  padding: 20px;
+  transition: opacity 0.4s ease;
+  padding: 24px;
 }
 
-.card:hover .imageOverlay {
-  opacity: 1;
-}
+.card:hover .overlay { opacity: 1; }
 
-.overlayTitle {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.75rem;
-  letter-spacing: 0.12em;
+.overlayLabel {
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
   font-weight: 600;
 }
 
@@ -74,142 +69,123 @@
 }
 
 .overlayTag {
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.22);
   color: white;
   padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  backdrop-filter: blur(4px);
+  border-radius: 50px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  backdrop-filter: blur(6px);
 }
 
-/* ── Badges ── */
+/* Badges */
 .yearBadge {
   position: absolute;
-  top: 12px;
-  left: 12px;
-  background: rgba(0, 0, 0, 0.65);
+  top: 14px; left: 14px;
+  background: rgba(0,0,0,0.6);
   color: white;
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 20px;
-  backdrop-filter: blur(6px);
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 4px 11px;
+  border-radius: 50px;
+  backdrop-filter: blur(8px);
   letter-spacing: 0.04em;
 }
 
 .statusBadge {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 20px;
-  backdrop-filter: blur(6px);
+  top: 14px; right: 14px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 4px 11px;
+  border-radius: 50px;
+  backdrop-filter: blur(8px);
   letter-spacing: 0.02em;
 }
 
-.statusCompleted {
-  background: rgba(39, 174, 96, 0.85);
-  color: white;
-}
+.statusDone { background: rgba(39,174,96,0.88);  color: white; }
+.statusWip  { background: rgba(243,156,18,0.92);  color: white; }
+.statusIdea { background: rgba(100,100,100,0.82); color: white; }
 
-.statusInProgress {
-  background: rgba(243, 156, 18, 0.9);
-  color: white;
-}
-
-.statusConcept {
-  background: rgba(100, 100, 100, 0.8);
-  color: white;
-}
-
-/* Highlight ribbon */
-.highlightRibbon {
+.ribbon {
   position: absolute;
-  bottom: 12px;
-  left: 12px;
+  bottom: 14px; left: 14px;
   background: var(--primary-color);
   color: white;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 800;
-  padding: 3px 10px;
-  border-radius: 20px;
+  padding: 3px 12px;
+  border-radius: 50px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
-/* ── Card Body ── */
-.cardBody {
-  padding: 20px 22px 16px;
+/* ── Body ── */
+.body {
+  padding: 24px 26px 18px;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.categoryTag {
+.category {
   display: inline-block;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--primary-color);
-  background: color-mix(in srgb, var(--primary-color) 12%, transparent);
-  padding: 3px 10px;
-  border-radius: 20px;
+  background: color-mix(in srgb, var(--primary-color) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--primary-color) 22%, transparent);
+  padding: 4px 12px;
+  border-radius: 50px;
   align-self: flex-start;
 }
 
-.cardTitle {
-  font-size: 1.35rem;
+.title {
+  font-size: 1.3rem;
   font-weight: 800;
   color: var(--secondary-color);
   line-height: 1.25;
+  letter-spacing: -0.02em;
   margin: 0;
 }
 
-.cardDescription {
-  font-size: 0.92rem;
-  color: var(--text-color);
-  opacity: 0.78;
-  line-height: 1.65;
+.desc {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.7;
   margin: 0;
   flex-grow: 1;
 }
 
-/* Features list */
-.featuresList {
+/* Features */
+.features {
   list-style: none;
-  padding: 0;
-  margin: 4px 0 0;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
 }
 
 .featureItem {
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  font-size: 0.85rem;
-  color: var(--text-color);
-  opacity: 0.82;
+  font-size: 0.83rem;
+  color: var(--text-muted);
   line-height: 1.4;
 }
 
-.featureCheck {
+.check {
   color: var(--primary-color);
-  font-weight: 700;
-  font-size: 0.9rem;
+  font-weight: 800;
   flex-shrink: 0;
-  margin-top: 1px;
 }
 
-/* Tech tags */
-.tagsContainer {
+/* Tags */
+.tags {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
@@ -217,69 +193,71 @@
 }
 
 .tag {
-  background: color-mix(in srgb, var(--accent-color) 14%, var(--card-bg));
+  background: color-mix(in srgb, var(--accent-color) 12%, var(--bg-secondary));
   color: var(--accent-color);
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 0.78rem;
-  font-weight: 600;
-  border: 1px solid color-mix(in srgb, var(--accent-color) 30%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-color) 25%, transparent);
+  padding: 4px 11px;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
 .tagMore {
+  padding: 4px 11px;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 700;
   background: var(--border-color);
-  color: var(--text-color);
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 0.78rem;
-  font-weight: 600;
-  opacity: 0.7;
+  color: var(--text-muted);
 }
 
-/* ── Card Footer ── */
-.cardFooter {
+/* ── Footer ── */
+.footer {
   display: flex;
   gap: 10px;
-  padding: 14px 22px 18px;
+  padding: 16px 26px 22px;
   border-top: 1px solid var(--border-color);
   margin-top: auto;
 }
 
-.linkButton {
+.btn {
   flex: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 7px;
-  padding: 10px 14px;
+  padding: 11px 16px;
   border-radius: 50px;
+  font-size: 0.82rem;
   font-weight: 700;
-  font-size: 0.85rem;
-  transition: all 0.25s ease;
+  font-family: var(--font);
   cursor: pointer;
   text-decoration: none;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
+  transition: all 0.25s ease;
+  border: none;
 }
 
-.primaryLink {
+.btnPrimary {
   background: var(--primary-color);
   color: white;
-  box-shadow: 0 3px 12px color-mix(in srgb, var(--primary-color) 35%, transparent);
+  box-shadow: 0 3px 14px color-mix(in srgb, var(--primary-color) 32%, transparent);
 }
 
-.primaryLink:hover {
+.btnPrimary:hover {
   filter: brightness(1.1);
-  box-shadow: 0 5px 18px color-mix(in srgb, var(--primary-color) 45%, transparent);
+  box-shadow: 0 5px 20px color-mix(in srgb, var(--primary-color) 44%, transparent);
 }
 
-.secondaryLink {
+.btnSecondary {
   background: transparent;
   color: var(--text-color);
   border: 1.5px solid var(--border-color);
 }
 
-.secondaryLink:hover {
+.btnSecondary:hover {
   border-color: var(--primary-color);
   color: var(--primary-color);
-  background: color-mix(in srgb, var(--primary-color) 8%, transparent);
+  background: color-mix(in srgb, var(--primary-color) 7%, transparent);
 }
