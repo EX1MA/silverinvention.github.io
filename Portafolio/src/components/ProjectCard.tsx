@@ -1,85 +1,85 @@
+import { useRef } from 'react';
 import { motion } from 'framer-motion';
+import gsap from 'gsap';
 import type { Project } from '../types';
 import styles from './ProjectCard.module.css';
 
-interface ProjectCardProps {
-  project: Project;
-}
+interface ProjectCardProps { project: Project; }
 
-const statusConfig: Record<string, { label: string; className: string }> = {
-  'Completado':    { label: '✓ Completado',   className: styles.statusCompleted },
-  'En Desarrollo': { label: '⚡ En Desarrollo', className: styles.statusInProgress },
-  'Concepto':      { label: '✦ Concepto',      className: styles.statusConcept },
+const STATUS_MAP: Record<string, { label: string; cls: string }> = {
+  'Completado':    { label: '✓ Completado',   cls: styles.statusDone },
+  'En Desarrollo': { label: '⚡ En Desarrollo', cls: styles.statusWip  },
+  'Concepto':      { label: '✦ Concepto',      cls: styles.statusIdea },
 };
 
 export const ProjectCard = ({ project }: ProjectCardProps) => {
-  const statusInfo = project.status ? statusConfig[project.status] : null;
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // Subtle tilt on mouse move
+  const onMove = (e: React.MouseEvent) => {
+    const el  = cardRef.current!;
+    const box = el.getBoundingClientRect();
+    const rx  = ((e.clientY - box.top)  / box.height - 0.5) * 10;
+    const ry  = ((e.clientX - box.left) / box.width  - 0.5) * -10;
+    gsap.to(el, { rotateX: rx, rotateY: ry, duration: 0.35, ease: 'power2.out', transformPerspective: 900 });
+  };
+
+  const onLeave = () => {
+    gsap.to(cardRef.current, { rotateX: 0, rotateY: 0, duration: 0.6, ease: 'elastic.out(1, 0.5)' });
+  };
+
+  const statusInfo = project.status ? STATUS_MAP[project.status] : null;
 
   return (
     <motion.div
+      ref={cardRef}
       className={`${styles.card} ${project.highlight ? styles.highlighted : ''}`}
-      whileHover={{ y: -8, boxShadow: '0 24px 48px rgba(0,0,0,0.16)' }}
-      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+      style={{ transformStyle: 'preserve-3d' }}
     >
-      {/* Image + Overlay */}
-      <div className={styles.imageWrapper}>
-        <img
-          src={project.image}
-          alt={project.title}
-          className={styles.cardImage}
-          loading="lazy"
-        />
+      {/* ── Image ── */}
+      <div className={styles.imageWrap}>
+        <img src={project.image} alt={project.title} className={styles.img} loading="lazy" />
 
-        {/* Hover overlay: show all tech tags */}
-        <div className={styles.imageOverlay}>
-          <p className={styles.overlayTitle}>Stack Tecnológico</p>
+        {/* Hover overlay */}
+        <div className={styles.overlay}>
+          <p className={styles.overlayLabel}>Stack Tecnológico</p>
           <div className={styles.overlayTags}>
-            {project.technologies.map((tech) => (
-              <span key={tech} className={styles.overlayTag}>{tech}</span>
-            ))}
+            {project.technologies.map(t => <span key={t} className={styles.overlayTag}>{t}</span>)}
           </div>
         </div>
 
-        {/* Badges on image */}
-        {project.year && (
-          <span className={styles.yearBadge}>{project.year}</span>
-        )}
+        {/* Badges */}
+        {project.year && <span className={styles.yearBadge}>{project.year}</span>}
         {statusInfo && (
-          <span className={`${styles.statusBadge} ${statusInfo.className}`}>
-            {statusInfo.label}
-          </span>
+          <span className={`${styles.statusBadge} ${statusInfo.cls}`}>{statusInfo.label}</span>
         )}
-        {project.highlight && (
-          <span className={styles.highlightRibbon}>Destacado</span>
-        )}
+        {project.highlight && <span className={styles.ribbon}>★ Destacado</span>}
       </div>
 
-      {/* Card Body */}
-      <div className={styles.cardBody}>
+      {/* ── Body ── */}
+      <div className={styles.body}>
         {project.category && (
-          <span className={styles.categoryTag}>{project.category}</span>
+          <span className={styles.category}>{project.category}</span>
         )}
 
-        <h3 className={styles.cardTitle}>{project.title}</h3>
+        <h3 className={styles.title}>{project.title}</h3>
+        <p  className={styles.desc}>{project.description}</p>
 
-        <p className={styles.cardDescription}>{project.description}</p>
-
-        {/* Features list */}
-        {project.features && project.features.length > 0 && (
-          <ul className={styles.featuresList}>
-            {project.features.slice(0, 4).map((feature) => (
-              <li key={feature} className={styles.featureItem}>
-                <span className={styles.featureCheck}>✓</span>
-                {feature}
+        {project.features && (
+          <ul className={styles.features}>
+            {project.features.slice(0, 4).map(f => (
+              <li key={f} className={styles.featureItem}>
+                <span className={styles.check}>✓</span> {f}
               </li>
             ))}
           </ul>
         )}
 
-        {/* Tech tags (compact, first 4) */}
-        <div className={styles.tagsContainer}>
-          {project.technologies.slice(0, 4).map((tech) => (
-            <span key={tech} className={styles.tag}>{tech}</span>
+        <div className={styles.tags}>
+          {project.technologies.slice(0, 4).map(t => (
+            <span key={t} className={styles.tag}>{t}</span>
           ))}
           {project.technologies.length > 4 && (
             <span className={styles.tagMore}>+{project.technologies.length - 4}</span>
@@ -87,35 +87,31 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
         </div>
       </div>
 
-      {/* Card Footer */}
-      <div className={styles.cardFooter}>
+      {/* ── Footer ── */}
+      <div className={styles.footer}>
         <motion.a
           href={project.demoLink}
-          target="_blank"
-          rel="noreferrer"
-          className={`${styles.linkButton} ${styles.primaryLink}`}
+          target="_blank" rel="noreferrer"
+          className={`${styles.btn} ${styles.btnPrimary}`}
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.96 }}
         >
-          <span>Ver Demo</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-            <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
-            <polyline points="15 3 21 3 21 9" />
-            <line x1="10" y1="14" x2="21" y2="3" />
+          Ver Demo
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+            <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
           </svg>
         </motion.a>
         <motion.a
           href={project.repoLink}
-          target="_blank"
-          rel="noreferrer"
-          className={`${styles.linkButton} ${styles.secondaryLink}`}
+          target="_blank" rel="noreferrer"
+          className={`${styles.btn} ${styles.btnSecondary}`}
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.96 }}
         >
-          <span>Código</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-            <polyline points="16 18 22 12 16 6" />
-            <polyline points="8 6 2 12 8 18" />
+          Código
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
           </svg>
         </motion.a>
       </div>

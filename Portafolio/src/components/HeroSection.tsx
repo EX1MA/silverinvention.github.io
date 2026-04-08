@@ -9,136 +9,187 @@ interface HeroData {
   description: string;
   buttonText: string;
 }
+interface HeroSectionProps { data: HeroData; }
 
-interface HeroSectionProps {
-  data: HeroData;
-}
+/* ── Magnetic Button ─────────────────────── */
+const MagneticButton = ({
+  children, className, onClick,
+}: { children: React.ReactNode; className: string; onClick: () => void }) => {
+  const ref = useRef<HTMLButtonElement>(null);
 
-export const HeroSection = ({ data }: HeroSectionProps) => {
-  const preTitleRef = useRef<HTMLParagraphElement>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const subtitleRef = useRef<HTMLHeadingElement>(null);
-  const descRef = useRef<HTMLParagraphElement>(null);
-  const buttonsRef = useRef<HTMLDivElement>(null);
-  const shapesRef = useRef<HTMLDivElement>(null);
-  const tlRef = useRef<gsap.core.Timeline | null>(null);
-
-  if (!data) {
-    return <div style={{ padding: 100, color: 'red' }}>Error: Faltan datos del Hero</div>;
-  }
-
-  const scrollToSection = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  const onMove = (e: React.MouseEvent) => {
+    const el  = ref.current!;
+    const box = el.getBoundingClientRect();
+    const dx  = e.clientX - box.left - box.width  / 2;
+    const dy  = e.clientY - box.top  - box.height / 2;
+    gsap.to(el, { x: dx * 0.32, y: dy * 0.32, duration: 0.3, ease: 'power2.out' });
   };
 
-  // GSAP: Floating shapes animation (runs once, persistent)
+  const onLeave = () => {
+    gsap.to(ref.current, { x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.4)' });
+  };
+
+  return (
+    <button
+      ref={ref}
+      className={className}
+      onClick={onClick}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+    >
+      {children}
+    </button>
+  );
+};
+
+/* ── Main Component ──────────────────────── */
+export const HeroSection = ({ data }: HeroSectionProps) => {
+  const shapesRef   = useRef<HTMLDivElement>(null);
+  const preTitleRef = useRef<HTMLParagraphElement>(null);
+  const titleRef    = useRef<HTMLHeadingElement>(null);
+  const subtitleRef = useRef<HTMLHeadingElement>(null);
+  const descRef     = useRef<HTMLParagraphElement>(null);
+  const buttonsRef  = useRef<HTMLDivElement>(null);
+  const tlRef       = useRef<gsap.core.Timeline | null>(null);
+
+  if (!data) return <div style={{ padding: 100, color: 'red' }}>Error: Faltan datos del Hero</div>;
+
+  const scrollTo = (id: string) =>
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+
+  /* Floating shapes (persistent) */
   useEffect(() => {
     if (!shapesRef.current) return;
-    const shapes = gsap.utils.toArray<HTMLElement>(shapesRef.current.children);
-
-    const tweens = shapes.map((shape, i) =>
-      gsap.to(shape, {
-        x: gsap.utils.random(-45, 45),
-        y: gsap.utils.random(-55, 55),
-        rotation: gsap.utils.random(-20, 20),
-        scale: gsap.utils.random(0.88, 1.12),
-        duration: gsap.utils.random(4.5, 8),
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
-        delay: i * 0.38,
+    const els = gsap.utils.toArray<HTMLElement>(shapesRef.current.children);
+    const tw = els.map((el, i) =>
+      gsap.to(el, {
+        x:        gsap.utils.random(-50, 50),
+        y:        gsap.utils.random(-60, 60),
+        rotation: gsap.utils.random(-25, 25),
+        scale:    gsap.utils.random(0.85, 1.15),
+        duration: gsap.utils.random(5, 9),
+        repeat: -1, yoyo: true, ease: 'sine.inOut', delay: i * 0.4,
       })
     );
-
-    return () => { tweens.forEach((t) => t.kill()); };
+    return () => { tw.forEach(t => t.kill()); };
   }, []);
 
-  // GSAP: Entrance timeline (re-runs on role switch because component remounts)
+  /* Entrance timeline (re-runs on role switch via remount) */
   useEffect(() => {
     if (tlRef.current) tlRef.current.kill();
 
-    const targets = [preTitleRef.current, titleRef.current, subtitleRef.current, descRef.current];
-    gsap.set(targets, { opacity: 0, y: 35 });
+    // Get word spans inside the h1
+    const words = titleRef.current
+      ? Array.from(titleRef.current.querySelectorAll('[data-word]'))
+      : [];
 
-    const buttonChildren = buttonsRef.current ? Array.from(buttonsRef.current.children) : [];
-    gsap.set(buttonChildren, { opacity: 0, y: 22 });
+    const btnChildren = buttonsRef.current
+      ? Array.from(buttonsRef.current.children)
+      : [];
 
-    const tl = gsap.timeline({ delay: 0.1 });
+    // Set initial states
+    gsap.set(preTitleRef.current, { opacity: 0, y: 24 });
+    gsap.set(words,               { y: '110%' });
+    gsap.set(subtitleRef.current, { opacity: 0, y: 28 });
+    gsap.set(descRef.current,     { opacity: 0, y: 20 });
+    gsap.set(btnChildren,         { opacity: 0, y: 18 });
+
+    const tl = gsap.timeline({ delay: 0.15 });
     tlRef.current = tl;
 
-    tl.to(preTitleRef.current, { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out' })
-      .to(titleRef.current,    { opacity: 1, y: 0, duration: 0.7,  ease: 'back.out(1.7)' }, '-=0.25')
-      .to(subtitleRef.current, { opacity: 1, y: 0, duration: 0.6,  ease: 'power2.out' },    '-=0.35')
-      .to(descRef.current,     { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out' },    '-=0.3')
-      .to(buttonChildren,      { opacity: 1, y: 0, duration: 0.5, stagger: 0.13, ease: 'power2.out' }, '-=0.2');
+    tl.to(preTitleRef.current, { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' })
+      .to(words,               { y: '0%',   duration: 0.85, stagger: 0.08, ease: 'power4.out' }, '-=0.2')
+      .to(subtitleRef.current, { opacity: 1, y: 0, duration: 0.6,  ease: 'power3.out' }, '-=0.45')
+      .to(descRef.current,     { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' }, '-=0.35')
+      .to(btnChildren,         { opacity: 1, y: 0, duration: 0.5, stagger: 0.12, ease: 'power3.out' }, '-=0.25');
 
     return () => { tl.kill(); };
   }, [data]);
 
+  const titleWords = data.title.split(' ');
+
   return (
     <section id="hero" className={heroStyles.hero}>
 
-      {/* GSAP Floating Geometric Shapes */}
-      <div ref={shapesRef} className={heroStyles.shapesContainer} aria-hidden="true">
-        <div className={`${heroStyles.shape} ${heroStyles.blob1}`} />
-        <div className={`${heroStyles.shape} ${heroStyles.blob2}`} />
-        <div className={`${heroStyles.shape} ${heroStyles.ring1}`} />
-        <div className={`${heroStyles.shape} ${heroStyles.ring2}`} />
-        <div className={`${heroStyles.shape} ${heroStyles.square1}`} />
-        <div className={`${heroStyles.shape} ${heroStyles.square2}`} />
-        <div className={`${heroStyles.shape} ${heroStyles.dot1}`} />
-        <div className={`${heroStyles.shape} ${heroStyles.dot2}`} />
-        <div className={`${heroStyles.shape} ${heroStyles.line1}`} />
+      {/* ── Animated mesh background ── */}
+      <div className={heroStyles.mesh} aria-hidden="true" />
+
+      {/* ── Floating GSAP shapes ── */}
+      <div ref={shapesRef} className={heroStyles.shapes} aria-hidden="true">
+        <div className={`${heroStyles.shape} ${heroStyles.s1}`} />
+        <div className={`${heroStyles.shape} ${heroStyles.s2}`} />
+        <div className={`${heroStyles.shape} ${heroStyles.s3}`} />
+        <div className={`${heroStyles.shape} ${heroStyles.s4}`} />
+        <div className={`${heroStyles.shape} ${heroStyles.s5}`} />
+        <div className={`${heroStyles.shape} ${heroStyles.s6}`} />
+        <div className={`${heroStyles.shape} ${heroStyles.s7}`} />
+        <div className={`${heroStyles.shape} ${heroStyles.s8}`} />
       </div>
 
-      <div className={heroStyles.heroContent}>
-        <p ref={preTitleRef} className={heroStyles.preTitle}>¡Hola, soy</p>
+      {/* ── Content ── */}
+      <div className={heroStyles.content}>
 
-        <h1 ref={titleRef} className={heroStyles.title}>{data.title}</h1>
+        <p ref={preTitleRef} className={heroStyles.preTitle}>
+          <span className={heroStyles.preTitleDot} />
+          Disponible para proyectos
+        </p>
 
-        <h2 ref={subtitleRef} className={heroStyles.subtitle}>{data.subtitle}</h2>
+        {/* Word-by-word reveal */}
+        <h1 ref={titleRef} className={heroStyles.title}>
+          {titleWords.map((word, i) => (
+            <span key={i} className={heroStyles.wordWrapper}>
+              <span data-word className={heroStyles.word}>{word}</span>
+            </span>
+          ))}
+        </h1>
 
-        <p ref={descRef} className={heroStyles.description}>{data.description}</p>
+        <h2 ref={subtitleRef} className={heroStyles.subtitle}>
+          {data.subtitle}
+        </h2>
+
+        <p ref={descRef} className={heroStyles.description}>
+          {data.description}
+        </p>
 
         <div ref={buttonsRef} className={heroStyles.buttons}>
-          <motion.button
-            className={heroStyles.primaryButton}
-            onClick={() => scrollToSection('projects')}
-            whileHover={{ scale: 1.06, y: -4 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 15 }}
+          <MagneticButton
+            className={heroStyles.primaryBtn}
+            onClick={() => scrollTo('projects')}
           >
             {data.buttonText}
-          </motion.button>
-          <motion.button
-            className={heroStyles.secondaryButton}
-            onClick={() => scrollToSection('contact')}
-            whileHover={{ scale: 1.06, y: -4 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 15 }}
+            <svg className={heroStyles.btnIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </MagneticButton>
+
+          <MagneticButton
+            className={heroStyles.secondaryBtn}
+            onClick={() => scrollTo('contact')}
           >
-            Contactar
-          </motion.button>
+            Hablemos
+          </MagneticButton>
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <motion.div
+      {/* ── Scroll indicator ── */}
+      <motion.button
         className={heroStyles.scrollIndicator}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.8, duration: 0.6 }}
-        onClick={() => scrollToSection('about')}
+        transition={{ delay: 2.2, duration: 0.6 }}
+        onClick={() => scrollTo('about')}
+        aria-label="Scroll hacia abajo"
       >
         <motion.div
           className={heroStyles.scrollMouse}
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+          animate={{ y: [0, 9, 0] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
         >
           <div className={heroStyles.scrollWheel} />
         </motion.div>
-        <span className={heroStyles.scrollLabel}>Scroll</span>
-      </motion.div>
+        <span className={heroStyles.scrollText}>Explorar</span>
+      </motion.button>
+
     </section>
   );
 };
